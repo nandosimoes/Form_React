@@ -1,0 +1,28 @@
+* {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0; 
+    padding: 0;
+}
+
+.form-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerForm {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
