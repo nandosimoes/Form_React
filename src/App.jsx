@@ -3,7 +3,7 @@ import { Header } from './components/Header';
 import { Form } from './components/Form';
 import { Footer } from './components/Footer';
 import { SuccessScreen } from './components/SuccessScreen';
-import './App.css'; 
+import '../public/css/App.css'; 
 
 function App() {
     const [isSubmitted, setIsSubmitted] = useState(false);

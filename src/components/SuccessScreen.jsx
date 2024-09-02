@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './SuccessScreen.css';
+import "../../public/css/SuccessScreen.css";;
 
 export function SuccessScreen({ onClose }) {
     const [fadeOut, setFadeOut] = useState(false);
@@ -7,8 +7,8 @@ export function SuccessScreen({ onClose }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             setFadeOut(true);
-            setTimeout(onClose, 500); // Ajuste a duração da animação conforme necessário
-        }, 2500); // Mantém a tela por 2.5 segundos antes de começar a transição
+            setTimeout(onClose, 500);
+        }, 2500); 
 
         return () => clearTimeout(timer);
     }, [onClose]);

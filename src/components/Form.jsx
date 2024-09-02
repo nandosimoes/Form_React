@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Form.css";
+import "../../public/css/Form.css";
 
 export function Form({ onSubmit }) {
   const initialForm = {
