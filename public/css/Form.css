@@ -88,15 +88,19 @@ html {
     background-color: #333;
     color: #fff;
     width: 100%;
-    padding: 20px 5px 5px 10px; /* Corrigido */
+    padding: 20px 5px 5px 20px;
+    margin-bottom: 10px;
     outline: 0;
+    
     border: 1px solid rgba(105, 105, 105, 0.397);
     border-radius: 10px;
+    
 }
 
 .form label .input + span {
     color: rgba(255, 255, 255, 0.5);
     position: absolute;
+    margin-top: 0px;
     left: 10px;
     top: 0px;
     font-size: 0.9em;
@@ -147,4 +151,62 @@ html {
         transform: scale(1.8);
         opacity: 0;
     }
+}
+
+
+.progress-bar {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 100px;
+    padding-right: 100px;
+    margin-top: 30px;
+}
+
+.step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #18291b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.step.active {
+    background-color: #31a140;
+    color: #fff;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+}
+
+.checkbox-container  span{ 
+    font-size: 20px;
+    font-weight: 100;
+}
+.next {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    background-color: #31a140;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.next:hover {
+    background-color: #0056b3;
 }

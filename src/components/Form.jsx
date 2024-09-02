@@ -6,66 +6,95 @@ export function Form({ onSubmit }) {
     nome: "",
     email: "",
     telefone: "",
+    senha: "",
+    confirmacaoSenha: "",
+    termosAceitos: false,
   };
 
   const [formState, setFormState] = useState(initialForm);
+  const [step, setStep] = useState(1);
 
   const handleInput = (event) => {
-    const { value, name } = event.target;
-    setFormState({ ...formState, [name]: value });
+    const { value, name, type, checked } = event.target;
+    setFormState({
+      ...formState,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
-  const validateForm = () => {
-    const { nome, email, telefone } = formState;
+  const validateStep = () => {
+    const { nome, email, telefone, senha, confirmacaoSenha, termosAceitos } = formState;
 
-    const inputNameValue = nome.trim();
-    const inputEmailValue = email.trim();
-    const inputTelValue = telefone.trim();
+    if (step === 1) {
+      if (
+        nome.trim() === "" ||
+        nome.trim().length < 2 ||
+        nome.trim().length > 30 ||
+        /\d/.test(nome.trim())
+      ) {
+        alert(
+          "Digite um nome válido com no mínimo 2 e no máximo 30 caracteres e sem números."
+        );
+        return false;
+      }
 
-    if (
-      inputNameValue === "" ||
-      inputNameValue.length < 2 ||
-      inputNameValue.length > 30 ||
-      /\d/.test(inputNameValue)
-    ) {
-      alert(
-        "Digite um nome válido com no mínimo 2 e no máximo 30 caracteres e sem números."
-      );
-      return false;
+      const parteEmail = email.trim().split("@");
+      const dominios = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com"];
+      if (
+        email.trim().length < 10 ||
+        email.trim().length > 120 ||
+        parteEmail.length !== 2 ||
+        dominios.indexOf(parteEmail[1]) === -1
+      ) {
+        alert(
+          "Digite um Email válido com no mínimo 10 caracteres e no máximo 120 caracteres e use um domínio válido."
+        );
+        return false;
+      }
     }
 
-    const parteEmail = inputEmailValue.split("@");
-    const dominios = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com"];
-    if (
-      inputEmailValue.length < 10 ||
-      inputEmailValue.length > 120 ||
-      parteEmail.length !== 2 ||
-      dominios.indexOf(parteEmail[1]) === -1
-    ) {
-      alert(
-        "Digite um Email válido com no mínimo 10 caracteres e no máximo 120 caracteres e use um domínio válido."
-      );
-      return false;
+    if (step === 2) {
+      if (telefone.trim() === "" || telefone.trim().length !== 14) {
+        alert("Digite um telefone válido no formato (xx)xxxxx-xxxx.");
+        return false;
+      }
+
+      if (senha.trim() === "" || senha.trim().length < 6) {
+        alert("A senha deve ter no mínimo 6 caracteres.");
+        return false;
+      }
+
+      if (senha.trim() !== confirmacaoSenha.trim()) {
+        alert("As senhas não são iguais.");
+        return false;
+      }
     }
 
-    if (inputTelValue === "" || inputTelValue.length !== 14) {
-      alert("Digite um telefone válido no formato (xx)xxxxx-xxxx.");
+    if (step === 3 && !termosAceitos) {
+      alert("Você deve aceitar os termos e condições.");
       return false;
     }
 
     return true;
   };
 
+  const handleNext = () => {
+    if (validateStep()) {
+      setStep(step + 1);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!validateForm()) {
-      return;
+    if (validateStep()) {
+        const { confirmacaoSenha, ...dataToSubmit } = formState; 
+        onSubmit(dataToSubmit);
+        setFormState({ ...initialForm });
+        setStep(1);
     }
+};
 
-    onSubmit(formState);
-    setFormState({ ...initialForm });
-  };
 
   const formatPhoneInput = (event) => {
     let tel = event.target.value.replace(/\D/g, "");
@@ -78,46 +107,101 @@ export function Form({ onSubmit }) {
     <div className="containerForm">
       <form className="form" onSubmit={handleSubmit}>
         <p className="title">Registrar</p>
-        <p className="message">Inscreva-se agora e tenha acesso total ao nosso aplicativo.</p>
- 
-          <label>
-            <input
-              className="input"
-              type="text"
-              name="nome"
-              value={formState.nome}
-              onChange={handleInput}
-              required
-              placeholder=""
-            />
-            <span>Nome</span>
-          </label>
-          <label>
-            <input
-              className="input"
-              type="text"
-              name="email"
-              value={formState.email}
-              onChange={handleInput}
-              required
-              placeholder=""
-            />
-            <span>Email</span>
-          </label>
-        <label>
-          <input
-            className="input"
-            maxLength={14}
-            type="text"
-            name="telefone"
-            value={formState.telefone}
-            onChange={formatPhoneInput}
-            required
-            placeholder=""
-          />
-          <span>Telefone</span>
-        </label>
-        <button className="submit" type="submit">Enviar</button>
+        <p className="message">
+          Inscreva-se agora e tenha acesso total ao nosso aplicativo.
+        </p>
+        
+        {step === 1 && (
+          <>
+            <label>
+              <input
+                className="input"
+                type="text"
+                name="nome"
+                value={formState.nome}
+                onChange={handleInput}
+                required
+              />
+              <span>Nome</span>
+            </label>
+            <label>
+              <input
+                className="input"
+                type="text"
+                name="email"
+                value={formState.email}
+                onChange={handleInput}
+                required
+              />
+              <span>Email</span>
+            </label>
+            <button type="button" className="next" onClick={handleNext}>
+              Próximo
+            </button>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <label>
+              <input
+                className="input"
+                maxLength={14}
+                type="text"
+                name="telefone"
+                value={formState.telefone}
+                onChange={formatPhoneInput}
+                required
+              />
+              <span>Telefone</span>
+            </label>
+            <label>
+              <input
+                className="input"
+                type="password"
+                name="senha"
+                value={formState.senha}
+                onChange={handleInput}
+                required
+              />
+              <span>Senha</span>
+            </label>
+            <label>
+              <input
+                className="input"
+                type="password"
+                name="confirmacaoSenha"
+                onChange={handleInput}
+                required
+              />
+              <span>Confirme a Senha</span>
+            </label>
+            <button type="button" className="next" onClick={handleNext}>
+              Próximo
+            </button>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <label className="checkbox-container">
+              <input
+                type="checkbox"
+                name="termosAceitos"
+                checked={formState.termosAceitos}
+                onChange={handleInput}
+                required
+              />
+              <span>Eu aceito os termos e condições</span>
+            </label>
+            <button className="submit" type="submit">
+              Enviar
+            </button>
+          </>
+        )}
+        <div className="progress-bar">
+          <div className={`step ${step >= 1 ? "active" : ""}`}>1</div>
+          <div className={`step ${step >= 2 ? "active" : ""}`}>2</div>
+          <div className={`step ${step >= 3 ? "active" : ""}`}>3</div>
+        </div>
       </form>
     </div>
   );
